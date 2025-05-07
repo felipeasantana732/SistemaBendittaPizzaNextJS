@@ -1,0 +1,61 @@
+.pageWrapper {
+  /* Define as variáveis CSS (cores) especificamente para esta página/wrapper */
+  --color-primary-benditta: #000000;
+  --color-secondary-benditta: #FF0000;
+  --color-accent-yellow-benditta: #FFCC00;
+  --color-accent-green-benditta: #006633;
+  --color-white-benditta: #FFFFFF;
+  --color-gray-benditta: #F5F5F5;
+  --color-dark-gray-benditta: #333333;
+
+  /* Aplica estilos base que antes estavam no body/html, mas agora dentro do wrapper */
+  font-family: 'Roboto', sans-serif; /* Certifique-se de importar a fonte Roboto no layout global ou aqui */
+  background-color: var(--color-white-benditta);
+  line-height: 1.6;
+
+  /* Estilos que antes eram globais (*) podem ser aplicados a todos os filhos */
+  & * { /* Estilo para todos os descendentes de .pageWrapper */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Estilos específicos para elementos dentro desta página */
+  & a {
+    text-decoration: none;
+    /*color: inherit;*/
+  }
+
+  & button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    /* Adicione outros estilos de botão padrão para esta página aqui */
+  }
+
+  & img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Bom para evitar espaços extras */
+  }
+
+  /* Classe para container específico desta página, se necessário */
+  & .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+
+   /* Estilo para seções dentro desta página */
+  & section {
+    padding: 80px 0;
+  }
+}
+
+/* Media query para ajustar o padding das seções dentro do wrapper */
+@media (max-width: 768px) {
+  .pageWrapper section {
+    padding: 60px 0;
+  }
+}
