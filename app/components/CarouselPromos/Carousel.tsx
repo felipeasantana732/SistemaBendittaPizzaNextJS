@@ -81,10 +81,10 @@ export default function Carousel({ items, title = "Promoções" }: CarouselProps
   const visibleIndices = getVisibleIndices()
 
   return (
-    <div className="relative w-full  mt-4">
+    <div className="relative w-full  mt-10">
 
-        <div className=" text-center md:mb-12">
-            <CardTitle className="text-3xl text-center mb-8 md:mb-12">{title}</CardTitle>
+        <div className=" text-center ">
+            <CardTitle className="text-3xl text-center ">{title}</CardTitle>
         </div>
      
 
@@ -99,7 +99,7 @@ export default function Carousel({ items, title = "Promoções" }: CarouselProps
           </div>
         </div>
       ) : (
-        <div className="relative h-[900px] max-h-7x1 mx-auto max-w-7xl top-5">
+        <div className="relative h-[850px] max-h-7x1 mx-auto max-w-7xl ">
           {items.map((promo, index) => {
             const position = getPositionClass(index, visibleIndices)
             const isVisible = visibleIndices.includes(index)
