@@ -1,9 +1,97 @@
-import React from 'react';
-import styled from 'styled-components';
-import PDFViewer from './PDFViewer';
+import { Promotion } from "@/app/types/Promotion"
+import styled from "styled-components";
+import PDFViewer from "./PDFViewer";
+import Link from "next/link";
+import Carousel from "@/app/components/CarouselPromos/Carousel";
+import styles from "../styleBenditta.module.css";
+
+const promotions: Promotion[] = [
+  {
+    id: 1,
+    title: "Promo de terça",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 2,
+    title: "Promo de quarta",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 3,
+    title: "Promo de quinta",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 4,
+    title: "Promo de sexta",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 5,
+    title: "Promo de Sabado",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 6,
+    title: "Promo de Domingo",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 7,
+    title: "Promo de Borda",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 8,
+    title: "Promo de Refri",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  {
+    id: 9,
+    title: "Promo de teste",
+    description: "Descontos toda terça com até 30% off.",
+    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
+    originalPrice: "R$ 42,90",
+    discountedPrice: "R$ 29,90",
+  },
+  // ...
+]
 
 const MenuContainer = styled.section`
   padding: 100px 0;
+`;
+
+const ViewAllPromosLink = styled(Link)`
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-dark-gray-benditta-light);
+  text-decoration: underline;
 `;
 
 const MenuContent = styled.div`
@@ -18,9 +106,9 @@ const SectionTitle = styled.h2`
   margin-bottom: 20px;
   position: relative;
   display: inline-block;
-  
+
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -10px;
     left: 50%;
@@ -48,46 +136,33 @@ const MenuPDFContainer = styled.div`
   align-items: center;
 `;
 
-const SpecialOffer = styled.div`
-  background-color: var(--color-accent-yellow-benditta);
-  color: var(--color-primary-benditta);
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 50px;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  
-  h3 {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    font-size: 1.1rem;
-    margin-bottom: 0;
-  }
-`;
-
 const Menu: React.FC = () => {
   return (
+    
     <MenuContainer id="cardapio">
       <MenuContent>
         <SectionTitle>Nosso Cardápio</SectionTitle>
         <MenuDescription>
-          Conheça nossas deliciosas opções de pizzas, preparadas com ingredientes selecionados e nossa exclusiva massa tradicional italiana com 48 horas de fermentação.
+          Conheça nossas deliciosas opções de pizzas, preparadas com
+          ingredientes selecionados e nossa exclusiva massa tradicional italiana
+          com 48 horas de fermentação.
         </MenuDescription>
-        
+
         <MenuPDFContainer>
           <PDFViewer />
         </MenuPDFContainer>
-        
-        <SpecialOffer>
-          <h3>Pizza do Dia - R$ 45,00</h3>
-          <p>Disponível todos os dias da semana! Solicite o sabor do dia com nossos atendentes.</p>
-        </SpecialOffer>
       </MenuContent>
+
+ 
+        <main className={`${styles.container } mx-auto `}>
+          <Carousel items={promotions} />
+        </main>
+        <ViewAllPromosLink href="/promos">
+          Ver todas as promoções
+        </ViewAllPromosLink>
+
     </MenuContainer>
+    
   );
 };
 

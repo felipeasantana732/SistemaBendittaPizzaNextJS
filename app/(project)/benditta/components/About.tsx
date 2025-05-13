@@ -95,14 +95,14 @@ const About: React.FC = () => {
         <AboutText>
           <SectionTitle>Sobre a Benditta Pizza</SectionTitle>
           <AboutDescription>
-            A Benditta Pizza nasceu da paixão pela autêntica pizza italiana. Nossa missão é proporcionar uma experiência gastronômica única, com ingredientes selecionados e massa tradicional italiana fermentada por 48 horas.
+            A Benditta Pizza nasceu da paixão pela autêntica pizza italiana. Nossa missão é proporcionar uma experiência gastronômica única, com ingredientes selecionados, massa tradicional italiana fermentada por 48 horas e entrega o mais rapida possivel.
           </AboutDescription>
           <AboutDescription>
             Cada pizza é preparada com carinho e atenção aos detalhes, seguindo receitas que combinam tradição e inovação. Nosso compromisso é com a qualidade e a satisfação dos nossos clientes.
           </AboutDescription>
           <HighlightBox>
             <h3>Massa Tradicional Italiana</h3>
-            <p>Nossa massa passa por um processo de fermentação de 48 horas, resultando em uma textura leve, crocante por fora e macia por dentro, com sabor inigualável.</p>
+            <p>Nossa massa passa pelo tradicional processo de fermentação de 48 horas, resultando em uma textura leve, crocante por fora e macia por dentro, com sabor inigualável.</p>
           </HighlightBox>
         </AboutText>
         <AboutImage>

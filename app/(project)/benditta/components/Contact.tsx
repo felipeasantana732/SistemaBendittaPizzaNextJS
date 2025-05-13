@@ -145,8 +145,8 @@ const Contact: React.FC = () => {
             <CardIcon>🕒</CardIcon>
             <CardTitle>Horário de Funcionamento</CardTitle>
             <CardText>
-              Segunda a Domingo<br />
-              18:00 às 23:00
+              Terça a Domingo<br />
+              19:00 às 23:00
             </CardText>
           </ContactCard>
           
@@ -155,14 +155,14 @@ const Contact: React.FC = () => {
             <CardTitle>Localização</CardTitle>
             <CardText>
               Goiânia - GO<br />
-              Entrega para toda a cidade
+              Entrega até 5 Km da Loja
             </CardText>
           </ContactCard>
         </ContactCards>
         
         <LocationMap>
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d245794.16465372825!2d-49.438387!3d-16.686882!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef6bd58d80867%3A0xef692bad20d2678e!2sGoi%C3%A2nia%2C%20GO!5e0!3m2!1spt-BR!2sbr!4v1619123456789!5m2!1spt-BR!2sbr" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3822.173574204335!2d-49.3272842!3d-16.6681954!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935ef5d7b7d61e87%3A0x58a36f960e072cbf!2sBenditta%20Pizza%20Delivery!5e0!3m2!1spt-BR!2sbr!4v1746659385068!5m2!1spt-BR!2sbr" 
             allowFullScreen 
             loading="lazy" 
             title="Localização Benditta Pizza"
