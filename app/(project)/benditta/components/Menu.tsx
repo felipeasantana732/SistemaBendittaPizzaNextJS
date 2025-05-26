@@ -1,85 +1,22 @@
-import { Promotion } from "@/app/types/Promotion"
+//import { Promotion } from "@/app/types/Promotion"
 import styled from "styled-components";
 import PDFViewer from "./PDFViewer";
 import Link from "next/link";
 import Carousel from "@/app/components/CarouselPromos/Carousel";
 import styles from "../styleBenditta.module.css";
+import { Promocao, Promotion } from "@/app/types/Promocao";
+import { useEffect, useState } from "react";
 
-const promotions: Promotion[] = [
-  {
-    id: 1,
-    title: "Promo de terça",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 2,
-    title: "Promo de quarta",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 3,
-    title: "Promo de quinta",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 4,
-    title: "Promo de sexta",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 5,
-    title: "Promo de Sabado",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 6,
-    title: "Promo de Domingo",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 7,
-    title: "Promo de Borda",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 8,
-    title: "Promo de Refri",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  {
-    id: 9,
-    title: "Promo de teste",
-    description: "Descontos toda terça com até 30% off.",
-    image: "/img/bendittaPizza/pizza-do-dia-frango.png?height=720&width=1280",
-    originalPrice: "R$ 42,90",
-    discountedPrice: "R$ 29,90",
-  },
-  // ...
-]
+function mapApiPromo(apiPromo: Promocao): Promotion {
+  return {
+    id: apiPromo.id,
+    title: apiPromo.nome,
+    description: apiPromo.descricao ?? null,
+    image: apiPromo.imagem_url ?? null,
+    originalPrice: apiPromo.preco_original ?? null,
+    discountedPrice: apiPromo.preco_promo ?? null,
+  };
+}
 
 const MenuContainer = styled.section`
   padding: 100px 0;
@@ -137,8 +74,39 @@ const MenuPDFContainer = styled.div`
 `;
 
 const Menu: React.FC = () => {
+  const [promocoes, setPromocoes] = useState<Promotion[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPromocoes = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch("/api/promos");
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
+        }
+        const data = await response.json();
+        const rawPromos = data.promosAPI; // de acordo com seu exemplo
+
+        const formatted = rawPromos.map((promo: Promocao) =>
+          mapApiPromo(promo)
+        );
+        setPromocoes(formatted);
+      } catch (err) {
+        console.error("Error fetching promos:", err);
+        setError(err instanceof Error ? err.message : "Erro desconhecido");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPromocoes();
+  }, []);
+
   return (
-    
     <MenuContainer id="cardapio">
       <MenuContent>
         <SectionTitle>Nosso Cardápio</SectionTitle>
@@ -153,16 +121,17 @@ const Menu: React.FC = () => {
         </MenuPDFContainer>
       </MenuContent>
 
- 
-        <main className={`${styles.container } mx-auto `}>
-          <Carousel items={promotions} />
-        </main>
-        <ViewAllPromosLink href="/promos">
-          Ver todas as promoções
-        </ViewAllPromosLink>
-
+      <main className={`${styles.container} mx-auto `}>
+        {isLoading && <p>Carregando promoções...</p>}
+        {error && <p>Erro: {error}</p>}
+        {!isLoading && !error && promocoes.length > 0 && (
+          <Carousel items={promocoes} />
+        )}
+      </main>
+      <ViewAllPromosLink href="/promos">
+        Ver todas as promoções
+      </ViewAllPromosLink>
     </MenuContainer>
-    
   );
 };
 

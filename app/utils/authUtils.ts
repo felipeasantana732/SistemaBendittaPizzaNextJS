@@ -6,9 +6,8 @@ export async function getUserOrRedirect() {
   const { data: { user }, error } =  await supabase.auth.getUser();
 
   if (error || !user) {
-    console.log('Usuário não autenticado, redirecionando para /login');
+    console.log('Acesso não autorizado! (no session)');
     redirect('/login');
   }
-  // Retorna o usuário se encontrado, para uso na página
   return user;
 }

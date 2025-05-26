@@ -32,15 +32,69 @@ model documentos {
   embedding Unsupported("vector")?
 }
 
-model documents {
-  id        BigInt                 @id @default(autoincrement())
-  content   String?
-  metadata  Json?
-  embedding Unsupported("vector")?
-}
-
 model n8n_chat_histories {
   id         Int    @id @default(autoincrement())
   session_id String @db.VarChar(255)
   message    Json
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ingredientes {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome              String
+  ativo             Boolean?            @default(true)
+  criado_em         DateTime?           @default(now()) @db.Timestamp(6)
+  item_ingredientes item_ingredientes[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model item_ingredientes {
+  item_id        String         @db.Uuid
+  ingrediente_id String         @db.Uuid
+  ingredientes   ingredientes   @relation(fields: [ingrediente_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  itens_cardapio itens_cardapio @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([item_id, ingrediente_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model itens_cardapio {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome              String
+  tipo              String
+  tamanho           String?
+  preco             Decimal?            @db.Decimal(10, 2)
+  preco_grande      Decimal?            @db.Decimal(10, 2)
+  preco_individual  Decimal?            @db.Decimal(10, 2)
+  ativo             Boolean?            @default(true)
+  criado_em         DateTime?           @default(now()) @db.Timestamp(6)
+  categoria_pizza   String?
+  item_ingredientes item_ingredientes[]
+  itens_promo       itens_promo[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model itens_promo {
+  item_id        String         @db.Uuid
+  promo_id       String         @db.Uuid
+  itens_cardapio itens_cardapio @relation(fields: [item_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  promos         promos         @relation(fields: [promo_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([item_id, promo_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model promos {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome            String
+  created_at      DateTime      @default(now()) @db.Timestamptz(6)
+  expiration_date DateTime?     @db.Timestamptz(6)
+  active          Boolean?      @default(true)
+  preco_original  Decimal?      @db.Decimal
+  preco_promo     Decimal?      @db.Decimal
+  imagem_url      String?
+  descricao       String?
+  itens_promo     itens_promo[]
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 
+
 const FooterContainer = styled.footer`
   background-color: var(--color-primary-benditta);
   color: var(--color-white-benditta);

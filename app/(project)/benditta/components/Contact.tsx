@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import WhatsAppIcon from '@/app/components/assets/icons/whatsapp-icon.svg'
+import Image from 'next/image';
 
 
 const ContactContainer = styled.section`
@@ -68,6 +70,14 @@ const CardIcon = styled.div`
   font-size: 2.5rem;
   margin-bottom: 20px;
   color: var(--color-accent-yellow-benditta);
+
+`;
+const CardIconSvg = styled.div`
+  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
 `;
 
 const CardTitle = styled.h3`
@@ -129,7 +139,9 @@ const Contact: React.FC = () => {
         
         <ContactCards>
           <ContactCard>
-            <CardIcon>📱</CardIcon>
+            <CardIconSvg className='flex items-center' >
+              <Image src={WhatsAppIcon} alt="WppIcon" width={40} height={40} />
+            </CardIconSvg>
             <CardTitle>WhatsApp</CardTitle>
             <CardText>Faça seu pedido diretamente pelo WhatsApp. Atendimento rápido e eficiente.</CardText>
             <WhatsAppButton 
@@ -154,8 +166,9 @@ const Contact: React.FC = () => {
             <CardIcon>📍</CardIcon>
             <CardTitle>Localização</CardTitle>
             <CardText>
+              Av. Vista Alegre, 924, São Francisco. <br />
               Goiânia - GO<br />
-              Entrega até 5 Km da Loja
+              Entregamos até 5 Km da Loja
             </CardText>
           </ContactCard>
         </ContactCards>

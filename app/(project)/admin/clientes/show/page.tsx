@@ -7,32 +7,23 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {ClienteAPI} from "@/app/types/Cliente";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { PlusSquare } from "lucide-react";
 
-// 1. Defina uma interface para o objeto de usuário,
-// correspondendo aos dados que sua API /api/users retorna.
-// Baseado na interface ClienteAPI do Canvas api-user-by-id-route.
-interface User {
-  id: string; // Vem como string da API após a conversão do BigInt
-  created_at: string | Date; // A API retorna string JSON para datas
-  nomeCliente: string | null;
-  telefoneCliente: string | null;
-  enderecoCliente: string | null;
-  // Adicione outros campos se sua API /api/users (a que lista todos) os retornar
-  // idMensagem: string | null;
-  // sessionID: string | null;
-}
 
 export default function ListUsers() {
-  // 2. Use a interface User para tipar os estados
-  const [users, setUsers] = useState<User[]>([]);
+  
+  const [users, setUsers] = useState<ClienteAPI[]>([]);
   const [nameFilter, setNameFilter] = useState("");
   const [idFilter, setIdFilter] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<ClienteAPI[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
 
-  // Fetch users from API
+ 
   useEffect(() => {
     const fetchUsers = async () => {
       setIsLoading(true);
@@ -44,8 +35,8 @@ export default function ListUsers() {
           throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
         }
         const data = await response.json();
-        setUsers(data as User[]); // Faz um type assertion, idealmente a API já retorna o tipo correto
-        setFilteredUsers(data as User[]); // Inicializa filteredUsers com todos os usuários
+        setUsers(data as ClienteAPI[]); // Faz um type assertion, idealmente a API já retorna o tipo correto
+        setFilteredUsers(data as ClienteAPI[]); // Inicializa filteredUsers com todos os usuários
       } catch (err) {
         console.error("Error fetching users:", err);
         setError(err instanceof Error ? err.message : "Ocorreu um erro desconhecido ao buscar usuários.");
@@ -102,7 +93,17 @@ export default function ListUsers() {
   return (
     <>
       <div className="container mx-auto py-6 px-4">
-        <h1 className="text-2xl font-bold mb-6">Usuários do Sistema</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Clientes</h1>
+          <Button asChild size="lg" className="bg-green-500"> 
+            <Link href="/admin/clientes/add">
+              <span className="flex items-center">
+                <PlusSquare className="mr-2 h-5 w-5" />
+                Novo Cliente
+              </span>
+            </Link>
+          </Button>
+        </div>
 
         {/* Filters */}
         <Card className="mb-6">
@@ -151,18 +152,15 @@ export default function ListUsers() {
                 filteredUsers.map((user) => (
                   <TableRow key={user.id}>
                     <TableCell className="font-medium">{user.id}</TableCell>
-                    <TableCell>{user.nomeCliente ?? 'N/A'}</TableCell> {/* 3. Usa nomeCliente */}
-                    {/* <TableCell>{user.type === "customer" ? "Cliente" : "Funcionário"}</TableCell> */}
-                    <TableCell className="hidden md:table-cell">{user.enderecoCliente ?? 'N/A'}</TableCell> {/* 3. Usa enderecoCliente */}
-                    <TableCell className="hidden md:table-cell">{user.telefoneCliente ?? 'N/A'}</TableCell> {/* 3. Usa telefoneCliente */}
-                    <TableCell>{formatDate(user.created_at)}</TableCell> {/* 3. Usa created_at */}
+                    <TableCell>{user.nomeCliente ?? 'N/A'}</TableCell> 
+                    <TableCell className="hidden md:table-cell">{user.enderecoCliente ?? 'N/A'}</TableCell> 
+                    <TableCell className="hidden md:table-cell">{user.telefoneCliente ?? 'N/A'}</TableCell> 
+                    <TableCell>{formatDate(user.created_at)}</TableCell> 
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-4"> {/* Ajusta colSpan */}
-                    Nenhum usuário encontrado com os filtros aplicados.
-                  </TableCell>
+                  <TableCell colSpan={5} className="text-center py-4">Nenhum usuário encontrado com os filtros aplicados.</TableCell>
                 </TableRow>
               )}
             </TableBody>

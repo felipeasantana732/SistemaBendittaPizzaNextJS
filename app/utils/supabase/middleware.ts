@@ -30,25 +30,19 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // IMPORTANT: Avoid writing code between createServerClient and supabase.auth.getUser().
-  // Issues like random logouts can occur if this is not followed.
-
+ 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   // Define rotas públicas que não exigem login
-  const publicPaths = ['/', '/login', '/auth']; // Adicione outras rotas públicas aqui (ex: '/sobre')
+  const publicPaths = ['/', '/login', '/auth', '/api/promos' ]; 
 
   // Verifica se o usuário NÃO está logado E se a rota atual NÃO é uma das públicas
   if (
     !user &&
     !publicPaths.some(path => request.nextUrl.pathname === path || (path !== '/' && request.nextUrl.pathname.startsWith(path)))
-    // Explicação da condição acima:
-    // 1. !user: Garante que só aplicamos isso a usuários não logados.
-    // 2. !publicPaths.some(...): Verifica se o caminho atual NÃO está na lista de caminhos públicos.
-    //    - request.nextUrl.pathname === path: Verifica correspondência exata (importante para '/')
-    //    - (path !== '/' && request.nextUrl.pathname.startsWith(path)): Para outros caminhos como '/login', '/auth', permite sub-rotas (ex: /auth/callback)
+    //Permite Sub Rotas "/login autoriza /login/callback por exemplo"
   ) {
     // Redireciona o usuário não logado para a página de login
     const url = request.nextUrl.clone()
@@ -57,15 +51,15 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-   // Opcional: Redirecionar usuário logado se tentar acessar /login
+   // Redirecionar usuário logado se tentar acessar /login
    if (user && request.nextUrl.pathname === '/login') {
        const url = request.nextUrl.clone();
-       url.pathname = '/dashboard'; // Ou sua página principal após login
-       console.log(`Redirecting authenticated user from /login to /dashboard`); // Log para debug
+       url.pathname = '/admin/dashboard'; // Pag principal pos login
+       console.log(`Redirecting authenticated user from /login to /admin/dashboard`); 
        return NextResponse.redirect(url);
    }
 
 
-  // IMPORTANT: Retorna a resposta do Supabase (que contém os cookies atualizados)
+  // IMPORTANTE: Retorna a resposta do Supabase (que contém os cookies atualizados)
   return supabaseResponse
 }

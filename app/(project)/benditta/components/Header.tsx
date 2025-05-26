@@ -18,7 +18,7 @@ interface MobileMenuProps {
   $isOpen: boolean;
 }
 
-// --- STYLED COMPONENTS DO HEADER ORIGINAL ---
+// --- STYLED COMPONENTS ---
 const HeaderContainer = styled.header<HeaderProps>`
   position: fixed;
   top: 0;
@@ -113,7 +113,6 @@ const MobileMenuButton = styled.button`
   }
 `;
 
-// --- STYLED COMPONENTS ADICIONADOS DO ResponsiveUI ---
 
 const WhatsAppButton = styled.a`
   position: fixed;
@@ -182,7 +181,7 @@ const ScrollToTopButton = styled.button<ScrollButtonProps>`
   }
 `;
 
-// Componente para criar um menu mobile
+
 const MobileMenuContainer = styled.div<MobileMenuProps>`
   position: fixed;
   top: 0;
@@ -235,17 +234,17 @@ const CloseButton = styled.button`
 `;
 
 
-// --- COMPONENTE FUNCIONAL HEADER ---
+// --- COMPONENTE  HEADER ---
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = React.useState(false);
   const [$mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [showScrollButton, setShowScrollButton] = React.useState(false); // Estado para o botão de voltar ao topo
+  const [showScrollButton, setShowScrollButton] = React.useState(false); 
 
-  // Efeito para o header com scroll
+ 
   React.useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-      // Para o botão de voltar ao topo
+      
       if (window.scrollY > 300) {
         setShowScrollButton(true);
       } else {
@@ -258,7 +257,7 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  // Função para rolar para o topo da página
+  
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -266,13 +265,13 @@ const Header: React.FC = () => {
     });
   };
 
-  // Função para fechar o menu mobile (usada nos links e no botão de fechar)
+  
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
-    document.body.style.overflow = 'auto'; // Restaura o scroll da página
+    document.body.style.overflow = 'auto'; 
   };
   
-  // Função para abrir/fechar o menu mobile
+  // Abrir/fechar o menu mobile
   const toggleMobileMenu = () => {
     const newMenuState = !$mobileMenuOpen;
     setMobileMenuOpen(newMenuState);

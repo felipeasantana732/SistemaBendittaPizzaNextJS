@@ -1,8 +1,7 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/app/utils/supabase/server';
-import UserMenu from '@/app/components/userMenu/employedMenu'; // Ou o menu correto
 
+import UserMenu from '@/app/components/userMenu/employedMenu'; // Ou o menu correto
 import { AdminHeaderContainer, AdminMainContent } from '@/app/components/admin/AdminLayoutStyles';
+import { getUserOrRedirect } from '@/app/utils/authUtils';
 
 
 
@@ -12,15 +11,9 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (error || !user) {
-    redirect('/login');
-  }
-
-
-
+  const user = await getUserOrRedirect();
+  console.log("User loged: ", user);
   return (
     <div>
       <AdminHeaderContainer>

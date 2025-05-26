@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Promotion } from "@/app/types/Promotion";
+import { Promotion } from "@/app/types/Promocao";
 
 type CarouselCardProps = {
   promo: Promotion;
@@ -14,7 +14,7 @@ export function CarouselCard({ promo }: CarouselCardProps) {
         <div className="relative w-full aspect-[9/16] mb-2 overflow-hidden rounded-md">
           <Image
             src={promo.image || "/placeholder.svg"}
-            alt={promo.title}
+            alt={promo?.title ?? "Sem descrição"}
             className="object-cover"
             fill
             priority
@@ -27,10 +27,11 @@ export function CarouselCard({ promo }: CarouselCardProps) {
         <div className="= flex items-center justify-between gap-8">
           <div className="flex flex-col">
             <span className="text-sm text-muted-foreground line-through">
-              {promo.originalPrice}
+              <div className="text-md">R$    {promo.originalPrice},00</div> 
             </span>
-            <span className="text-2xl font-bold underline text-red-700 decoration-black">
-              {promo.discountedPrice}
+            <span className="text-3xl font-bold underline text-red-700 decoration-black">
+              <div className="text-md">R$    {promo.discountedPrice},00</div> 
+              
             </span>
           </div>
           <Button className="flex-1 mt-1">Confira</Button>
