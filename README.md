@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📝 Descrição do Projeto
+Este projeto é um aplicativo web desenvolvido com foco em otimizar o gerenciamento de promoções e operações de delivery para uma pizzaria, utilizando uma stack moderna e eficiente. 
 
-## Getting Started
+🚀 Tecnologias Utilizadas
+Next.js — Framework React para construção de aplicações web com SSR (Server Side Rendering) e SSG (Static Site Generation).
 
-First, run the development server:
+React — Biblioteca para construção de interfaces de usuário interativas e componentizadas.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+TypeScript — Tipagem estática para maior segurança e produtividade no desenvolvimento.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Supabase — Backend as a Service (BaaS) utilizado para autenticação, armazenamento de arquivos e banco de dados.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Prisma ORM — Ferramenta para interação eficiente e segura com o banco de dados relacional.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+✅ Status atual do MVP
+O MVP (Minimum Viable Product) já conta com as seguintes funcionalidades implementadas:
 
-## Learn More
+HomePage — Landing page pública da pizzaria, apresentando a marca e principais informações.
 
-To learn more about Next.js, take a look at the following resources:
+Rota de promoções pública — Página de visualização de promoções (view), acessível sem autenticação.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+API de promoções — CRUD completo de promoções implementado via Next.js API Routes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Rotas administrativas (acesso restrito, exigem autenticação):
 
-## Deploy on Vercel
+/clientes — Tela administrativa de listagem de clientes (pronta).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+/clientes/[id] — Tela de visualização/edição de dados de um cliente específico (pronta).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+/pedidos — Planejada, ainda não implementada.
+
+/promos — Tela administrativa para editar promoções (em desenvolvimento, somente API pronta).
+
+/promos/[id] — Tela administrativa de edição de uma promoção específica (em desenvolvimento, somente API pronta).
+
+🔜 Próximos passos
+Após a entrega do MVP, os próximos marcos do roadmap incluem:
+
+Deploy da aplicação — Publicação da aplicação em ambiente de produção, utilizando serviços como Vercel .
+
+Integração com Chat Bot — Desenvolvimento de um sistema automatizado de atendimento ao cliente, permitindo:
+
+Consultas de promoções via WhatsApp.
+
+Recebimento e atualização de status de pedidos.
+
+Mapa de entregadores — Implementação de uma funcionalidade para visualizar em tempo real a localização dos entregadores, otimizando a logística e a comunicação com os clientes.
+
+🎯 Objetivo final
+Criar uma plataforma completa e escalável para a gestão de promoções, clientes e pedidos, automatizando processos internos, aprimorando a experiência do cliente e oferecendo uma solução eficiente para operações de delivery. Essa plataforma inicialmente será desenvolvida para a Benditta Pizza e posteriormente será replicada em uma versão redesenhada como um Saas.
