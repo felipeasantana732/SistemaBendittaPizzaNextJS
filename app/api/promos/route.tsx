@@ -1,11 +1,8 @@
 import { Promocao } from "@/app/types/Promocao";
 import { itensCardapio } from "@/app/types/ItemCardapio";
 import { NextResponse } from "next/server";
-import { promos } from "@prisma/client";
-import { itens_cardapio } from "@prisma/client";
+import { promos, itens_cardapio } from "@prisma/client";
 import prismaSingleton from "@/lib/prisma";
-
-//Rota Publica!
 
 // Função para formatar item_cardapio
 function formatarItemCardapio(item: itens_cardapio): itensCardapio {
@@ -18,10 +15,7 @@ function formatarItemCardapio(item: itens_cardapio): itensCardapio {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(request: Request) {
-  
-
+export async function GET() {
   try {
     const promocoesFromDB: promos[] = await prismaSingleton.promos.findMany({
       orderBy: {
@@ -29,10 +23,10 @@ export async function GET(request: Request) {
       },
     });
 
-    if (!promocoesFromDB) {
+    if (!promocoesFromDB.length) {
       return NextResponse.json(
         { message: "Nenhuma promoção encontrada." },
-        { status: 401 }
+        { status: 404 }
       );
     }
 
@@ -55,11 +49,11 @@ export async function GET(request: Request) {
       if (!itensPorPromo[idPromo]) {
         itensPorPromo[idPromo] = [];
       }
-
       const itemFormatado = formatarItemCardapio(relacao.itens_cardapio);
       itensPorPromo[idPromo].push(itemFormatado);
     }
 
+    // Formata as promoções
     const promosAPI: Promocao[] = promocoesFromDB.map((promo) => ({
       ...promo,
       preco_original: promo.preco_original?.toString() ?? null,
@@ -67,9 +61,48 @@ export async function GET(request: Request) {
       itensCardapio: itensPorPromo[promo.id] || [],
     }));
 
-    return NextResponse.json({ promosAPI }, { status: 200 });
+    // Busca todas as relações categoria <-> promo
+    const relacoesCategoriaPromo = await prismaSingleton.relacao_categoria_promo.findMany({
+      where: {
+        promo_id: { in: promoIDs },
+      },
+      include: {
+        categorias_promo: true,
+      },
+    });
 
+    // Agrupa as promoções por categoria
+    const categoriasComPromocoes: Record<string, {
+      id_categoria: string;
+      nome_categoria: string | null;
+      descricao: string | null;
+      rank: number | null;
+      promocoes: Promocao[];
+    }> = {};
+
+    for (const relacao of relacoesCategoriaPromo) {
+      const categoria = relacao.categorias_promo;
+      const categoriaID = categoria.id;
+
+      if (!categoriasComPromocoes[categoriaID]) {
+        categoriasComPromocoes[categoriaID] = {
+          id_categoria: categoriaID,
+          nome_categoria: categoria.nome ?? null,
+          descricao: categoria.descricao ?? null,
+          rank: categoria.rank ?? null,
+          promocoes: [],
+        };
+      }
+
+      const promocao = promosAPI.find((p) => p.id === relacao.promo_id);
+      if (promocao) {
+        categoriasComPromocoes[categoriaID].promocoes.push(promocao);
+      }
+    }
+
+    return NextResponse.json({ categorias: categoriasComPromocoes }, { status: 200 });
   } catch (e) {
+    console.error(e);
     return NextResponse.json({ error: e }, { status: 400 });
   }
 }

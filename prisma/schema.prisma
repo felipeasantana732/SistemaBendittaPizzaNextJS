@@ -8,10 +8,41 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model benditta_info {
+  id        BigInt                 @id @default(autoincrement())
+  content   String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+}
+
+model benditta_rag {
+  id        BigInt                 @id @default(autoincrement())
+  content   String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+}
+
+model benditta_teste {
+  id        BigInt                 @id @default(autoincrement())
+  content   String?
+  metadata  Json?
+  embedding Unsupported("vector")?
+}
+
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model cardapio {
   id       BigInt  @id @default(autoincrement())
   cardapio String?
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model categorias_promo {
+  id                      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome                    String?
+  rank                    Int?                      @db.SmallInt
+  descricao               String?
+  relacao_categoria_promo relacao_categoria_promo[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -23,19 +54,6 @@ model clientes_benditta {
   idMensagem      String?
   sesionID        String?
   enderecoCliente String?
-}
-
-model documentos {
-  id        BigInt                 @id @default(autoincrement())
-  content   String?
-  metadata  Json?
-  embedding Unsupported("vector")?
-}
-
-model n8n_chat_histories {
-  id         Int    @id @default(autoincrement())
-  session_id String @db.VarChar(255)
-  message    Json
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -84,17 +102,37 @@ model itens_promo {
   @@id([item_id, promo_id])
 }
 
+model n8n_chat_histories {
+  id         Int    @id @default(autoincrement())
+  session_id String @db.VarChar(255)
+  message    Json
+}
+
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model promos {
-  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nome            String
-  created_at      DateTime      @default(now()) @db.Timestamptz(6)
-  expiration_date DateTime?     @db.Timestamptz(6)
-  active          Boolean?      @default(true)
-  preco_original  Decimal?      @db.Decimal
-  preco_promo     Decimal?      @db.Decimal
-  imagem_url      String?
-  descricao       String?
-  itens_promo     itens_promo[]
+  id                      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome                    String
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  expiration_date         DateTime?                 @db.Timestamptz(6)
+  active                  Boolean?                  @default(true)
+  preco_original          Decimal?                  @db.Decimal
+  preco_promo             Decimal?                  @db.Decimal
+  imagem_url              String?
+  descricao               String?
+  image_url_small         String?
+  pessoas                 String?
+  itens_promo             itens_promo[]
+  relacao_categoria_promo relacao_categoria_promo[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model relacao_categoria_promo {
+  categoria_id     String           @db.Uuid
+  promo_id         String           @db.Uuid
+  categorias_promo categorias_promo @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promos           promos           @relation(fields: [promo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([categoria_id, promo_id])
 }

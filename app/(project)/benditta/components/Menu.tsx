@@ -4,8 +4,9 @@ import PDFViewer from "./PDFViewer";
 import Link from "next/link";
 import Carousel from "@/app/components/CarouselPromos/Carousel";
 import styles from "../styleBenditta.module.css";
-import { Promocao, Promotion } from "@/app/types/Promocao";
+import { Promocao, Promotion, CategoriaPromocoes } from "@/app/types/Promocao";
 import { useEffect, useState } from "react";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 function mapApiPromo(apiPromo: Promocao): Promotion {
   return {
@@ -74,7 +75,7 @@ const MenuPDFContainer = styled.div`
 `;
 
 const Menu: React.FC = () => {
-  const [promocoes, setPromocoes] = useState<Promotion[]>([]);
+  const [promocao, setPromocao] = useState<Promotion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -89,12 +90,32 @@ const Menu: React.FC = () => {
           throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
         }
         const data = await response.json();
-        const rawPromos = data.promosAPI; // de acordo com seu exemplo
+        const categoriasArray = Object.values(
+          data.categorias
+        ) as CategoriaPromocoes[];
 
-        const formatted = rawPromos.map((promo: Promocao) =>
-          mapApiPromo(promo)
+        /*for (let index = 0; index < categoriasArray.length; index++) {
+          for (let index2 = 0; index2 < categoriasArray[index].promocoes.length; index++) {
+            const promocoesArray = categoriasArray[index].promocoes[index2].map(mapApiPromo);
+            
+          }
+        } Opção com muito sofrimento Opção para mapear de categoriaPromocoes mais facil: flatmap
+
+        array.flatMap(callback)
+        Para cada item do array:
+        Executa a função callback e espera que ela retorne um array ou um valor.
+        Junta todos os resultados em um único array, mas sem criar arrays aninhados.
+       */
+
+        const promocoesArray = categoriasArray.flatMap((categoria) =>
+          categoria.promocoes.map(mapApiPromo)
         );
-        setPromocoes(formatted);
+
+        //Aqui usando FlatMap, iterei em todos valores de categorias e dentro de cada categoria
+        //fui em categoria.promocoes e mapeei usando a minha função
+
+        setPromocao(promocoesArray);
+
       } catch (err) {
         console.error("Error fetching promos:", err);
         setError(err instanceof Error ? err.message : "Erro desconhecido");
@@ -122,11 +143,18 @@ const Menu: React.FC = () => {
       </MenuContent>
 
       <main className={`${styles.container} mx-auto `}>
-        {isLoading && <p>Carregando promoções...</p>}
-        {error && <p>Erro: {error}</p>}
-        {!isLoading && !error && promocoes.length > 0 && (
-          <Carousel items={promocoes} />
+        {isLoading && (
+          <div className="container mx-auto py-6 px-4 text-center">
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            Cadastrando...
+          </div>
         )}
+        {error && <p>Erro: {error}</p>}
+        {!isLoading &&
+          !error &&
+          promocao.length > 0 &&
+              <Carousel items={promocao} />
+        }
       </main>
       <ViewAllPromosLink href="/promos">
         Ver todas as promoções

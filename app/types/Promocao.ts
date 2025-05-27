@@ -20,4 +20,29 @@ export interface Promocao {
     image: string | null,
     originalPrice: string | null,
     discountedPrice: string | null,
+
+  }
+
+  export interface RelacaoCategoriaPromo{
+    promo_id : string,
+    categoria_id : string,
+  }
+
+  export interface CategoriaPromocoes{
+    id: string,
+    nome:string,
+    descricao: string;
+    rank: number;
+    promocoes: Promocao[]
+  }
+
+  export interface PromocaoDetail{
+    id: string ,
+    nome: string | null, 
+    descricao: string | null,
+    imagem_url_small: string | null,
+    expiration_date:Date | null,
+    preco_original: string | null ,
+    preco_promo: string | null,
+    categoria_promo: CategoriaPromocoes | null
   }

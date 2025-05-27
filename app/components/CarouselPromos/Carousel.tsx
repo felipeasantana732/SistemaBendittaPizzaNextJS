@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { useMobile } from "@/app/hooks/useMobile"
 import { cn } from "@/lib/utils"
 import { CarouselCard } from "./CarouselCard"
-import { Promotion } from "@/app/types/Promotion"
+import { Promotion } from "@/app/types/Promocao"
 import styled from "styled-components"
 
 type CarouselProps = {
