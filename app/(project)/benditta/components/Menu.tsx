@@ -145,8 +145,10 @@ const Menu: React.FC = () => {
       <main className={`${styles.container} mx-auto `}>
         {isLoading && (
           <div className="container mx-auto py-6 px-4 text-center">
-            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-            Cadastrando...
+            <>
+            <ReloadIcon className="mr-auto h-4 w-4 animate-spin ml-auto" />
+            </>
+            Carregando...
           </div>
         )}
         {error && <p>Erro: {error}</p>}

@@ -1,15 +1,15 @@
-import { Promocao } from "@/app/types/Promocao";
-import { itensCardapio } from "@/app/types/ItemCardapio";
 import { NextResponse } from "next/server";
 import { promos, itens_cardapio } from "@prisma/client";
 import prismaSingleton from "@/lib/prisma";
+import { PromocaoSchema, ItensCardapio } from "@/app/types/Zod/ItemSchema";
 
 // Função para formatar item_cardapio
-function formatarItemCardapio(item: itens_cardapio): itensCardapio {
+function formatarItemCardapio(item: itens_cardapio): ItensCardapio {
   return {
     ...item,
     preco: item.preco?.toString() ?? null,
     preco_grande: item.preco_grande?.toString() ?? null,
+    criado_em: item.criado_em?.toString() ?? null,
     preco_individual: item.preco_individual?.toString() ?? null,
     ativo: item.ativo ?? null,
   };
@@ -42,7 +42,7 @@ export async function GET() {
     });
 
     // Agrupa os itens por promoção
-    const itensPorPromo: Record<string, itensCardapio[]> = {};
+    const itensPorPromo: Record<string, ItensCardapio[]> = {};
 
     for (const relacao of relacoesPromoItens) {
       const idPromo = relacao.promo_id;
@@ -54,8 +54,10 @@ export async function GET() {
     }
 
     // Formata as promoções
-    const promosAPI: Promocao[] = promocoesFromDB.map((promo) => ({
+    const promosAPI: PromocaoSchema[] = promocoesFromDB.map((promo) => ({
       ...promo,
+      created_at: promo.created_at?.toString() ?? null,
+      expiration_date: promo.expiration_date?.toString() ?? null,
       preco_original: promo.preco_original?.toString() ?? null,
       preco_promo: promo.preco_promo?.toString() ?? null,
       itensCardapio: itensPorPromo[promo.id] || [],
@@ -73,11 +75,11 @@ export async function GET() {
 
     // Agrupa as promoções por categoria
     const categoriasComPromocoes: Record<string, {
-      id_categoria: string;
-      nome_categoria: string | null;
+      id: string;
+      nome: string | null;
       descricao: string | null;
       rank: number | null;
-      promocoes: Promocao[];
+      promocoes: PromocaoSchema[];
     }> = {};
 
     for (const relacao of relacoesCategoriaPromo) {
@@ -86,8 +88,8 @@ export async function GET() {
 
       if (!categoriasComPromocoes[categoriaID]) {
         categoriasComPromocoes[categoriaID] = {
-          id_categoria: categoriaID,
-          nome_categoria: categoria.nome ?? null,
+          id: categoriaID,
+          nome: categoria.nome ?? null,
           descricao: categoria.descricao ?? null,
           rank: categoria.rank ?? null,
           promocoes: [],

@@ -5,11 +5,13 @@ export interface Promocao {
     nome: string , 
     descricao: string | null,
     imagem_url: string | null,
+    image_url_small: string | null,
     created_at: Date ,
     expiration_date:Date | null,
     active : boolean | null,
     preco_original: string | null ,
     preco_promo: string | null,
+    pessoas: string | null,
     itensCardapio : itensCardapio[];
   }
 
@@ -41,8 +43,8 @@ export interface Promocao {
     nome: string | null, 
     descricao: string | null,
     imagem_url_small: string | null,
-    expiration_date:Date | null,
+    expiration_date:string | null,
     preco_original: string | null ,
     preco_promo: string | null,
-    categoria_promo: CategoriaPromocoes | null
+    pessoas: string | null
   }

@@ -36,7 +36,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   // Define rotas públicas que não exigem login
-  const publicPaths = ['/', '/login', '/auth', '/api/promos' ]; 
+  const publicPaths = ['/', '/login', '/auth', '/api/promos', '/promos' ]; 
 
   // Verifica se o usuário NÃO está logado E se a rota atual NÃO é uma das públicas
   if (
