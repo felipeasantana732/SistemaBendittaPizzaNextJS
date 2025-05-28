@@ -11,10 +11,12 @@ import {ClienteAPI} from "@/app/types/Cliente";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusSquare } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 
 export default function ListUsers() {
-  
+  const router = useRouter();
   const [users, setUsers] = useState<ClienteAPI[]>([]);
   const [nameFilter, setNameFilter] = useState("");
   const [idFilter, setIdFilter] = useState("");
@@ -29,14 +31,14 @@ export default function ListUsers() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch('/api/users'); // Rota que lista todos os usuários
+        const response = await fetch('/api/users'); 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
         }
         const data = await response.json();
-        setUsers(data as ClienteAPI[]); // Faz um type assertion, idealmente a API já retorna o tipo correto
-        setFilteredUsers(data as ClienteAPI[]); // Inicializa filteredUsers com todos os usuários
+        setUsers(data as ClienteAPI[]); 
+        setFilteredUsers(data as ClienteAPI[]); 
       } catch (err) {
         console.error("Error fetching users:", err);
         setError(err instanceof Error ? err.message : "Ocorreu um erro desconhecido ao buscar usuários.");
@@ -48,32 +50,29 @@ export default function ListUsers() {
     fetchUsers();
   }, []);
 
-  // Apply filters when users, nameFilter, or idFilter changes
+  
   useEffect(() => {
-    let result = [...users]; // Começa com a lista original de usuários
+    let result = [...users]; 
 
-    // Apply name filter (case insensitive)
+   
     if (nameFilter) {
       result = result.filter((user) =>
-        user.nomeCliente?.toLowerCase().includes(nameFilter.toLowerCase()) // 3. Usa nomeCliente
+        user.nomeCliente?.toLowerCase().includes(nameFilter.toLowerCase()) 
       );
     }
 
-    // Apply ID filter (exact match)
+ 
     if (idFilter) {
-      // O ID é string, então a comparação direta funciona.
-      // Se o ID fosse número, seria user.id === Number(idFilter)
       result = result.filter((user) => user.id.includes(idFilter));
     }
 
     setFilteredUsers(result);
   }, [users, nameFilter, idFilter]);
 
-  // Format date to Brazilian format
+
   const formatDate = (dateString: string | Date | undefined | null) => {
     if (!dateString) return 'N/A';
     try {
-      // Tenta criar um objeto Date. Se já for Date, ótimo. Se for string, tenta parsear.
       const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
       return format(date, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
     } catch (e) {
@@ -89,6 +88,7 @@ export default function ListUsers() {
   if (error) {
     return <div className="container mx-auto py-6 px-4 text-center text-red-600">Erro: {error}</div>;
   }
+
 
   return (
     <>
@@ -150,7 +150,11 @@ export default function ListUsers() {
             <TableBody>
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => (
-                  <TableRow key={user.id}>
+                  <TableRow 
+                    key={user.id}
+                    onClick={() => router.push(`/admin/clientes/show/${user.id}`)}
+                    className="cursor-pointer hover:bg-gray-100"
+                  >
                     <TableCell className="font-medium">{user.id}</TableCell>
                     <TableCell>{user.nomeCliente ?? 'N/A'}</TableCell> 
                     <TableCell className="hidden md:table-cell">{user.enderecoCliente ?? 'N/A'}</TableCell> 

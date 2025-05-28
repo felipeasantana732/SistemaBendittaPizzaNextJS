@@ -19,10 +19,16 @@ function formatarItemCardapio(item: itens_cardapio): itensCardapio {
   };
 }
 
-export async function GET(request: Request,
-    { params }: {params: {id: string}}
-) { 
-  const promoID:string =  params.id ;
+export async function GET(request: Request) {
+  
+  const url = new URL(request.url)
+  const id = url.pathname.split('/').pop() // pega o último segmento
+
+  if (!id) {
+    return NextResponse.json({ message: 'ID não fornecido corretamente' }, { status: 400 })
+  }
+  
+  const promoID:string =  id ;
   try {
     const promocaoFromDB: promos | null = await prismaSingleton.promos.findUnique({
       where: {

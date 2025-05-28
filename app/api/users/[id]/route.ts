@@ -13,9 +13,14 @@ interface ClienteAPI {
   sesionID: string | null; 
 }
 
-export async function GET(request: Request,
-    { params }: {params: {id: string}}
-) { // 'request' pode ser usado para query params, etc.
+export async function GET(request: Request) { 
+  const url = new URL(request.url)
+  const id = url.pathname.split('/').pop() // pega o último segmento
+
+  if (!id) {
+    return NextResponse.json({ message: 'ID não fornecido corretamente' }, { status: 400 })
+  }
+
   const supabase = await createClient();
 
   try {
@@ -27,30 +32,7 @@ export async function GET(request: Request,
       return NextResponse.json({ message: 'Não autorizado' }, { status: 401 });
     }
 
-    // --- Opcional: Verificação de Role (Autorização) ---
-    // Se apenas funcionários/admins podem ver todos os clientes
-    /*
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profileError || !profile) {
-        console.error("API /api/users: Erro ao buscar perfil para usuário:", user.id, profileError);
-        return NextResponse.json({ message: 'Erro ao verificar permissões.' }, { status: 500 });
-    }
-
-    const allowedRoles = ['funcionario', 'super-admin'];
-    if (!allowedRoles.includes(profile.role)) {
-        console.warn(`API /api/users: Acesso negado para usuário ${user.id} com role ${profile.role}.`);
-        // Retorna erro 403 Forbidden se o role não for permitido
-        return NextResponse.json({ message: 'Acesso negado.' }, { status: 403 });
-    }
-    */
-    // --- Fim da Verificação de Role Opcional ---
-
-    const clientId:string = params.id ;
+    const clientId:string = id ;
 
     console.log("API /api/users/id: Buscando clientes com ID =", clientId);
 
@@ -68,25 +50,23 @@ export async function GET(request: Request,
         },
       });
 
-    if(!cliente){
+    if(!cliente || cliente===null){
         return NextResponse.json({ message: `Cliente não foi encontrado` }, { status: 400 }); // Bad Request
     }
 
 
     const clienteById: ClienteAPI = {
-        ...cliente, // Espalha as propriedades do objeto do banco
-        id: cliente.id.toString(), // Converte o BigInt 'id' para string
-        // Se houver outros campos BigInt, converta-os aqui também
-        // Exemplo: outroCampoBigInt: clienteFromDB.outroCampoBigInt.toString(),
+        ...cliente, 
+        id: cliente.id.toString(), 
       };
 
     console.log(`Esse é o Sr. ${clienteById.nomeCliente} `);
 
-    // 7. Retorne os dados usando NextResponse.json
+    
     return NextResponse.json(clienteById, { status: 200 });
 
   } catch (error) {
-    // 8. Trate outros erros (ex: erro do Prisma)
+ 
     console.error("API /api/users: Erro ao buscar clientes com Prisma:", error);
     return NextResponse.json(
       { message: "Erro interno ao buscar clientes.", error: (error as Error).message },
@@ -98,7 +78,7 @@ export async function GET(request: Request,
 
 
 export async function POST(request: Request) {
-  // Parse the request body
+  
   const body = await request.json();
   const { name } = body;
 
