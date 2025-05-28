@@ -36,18 +36,22 @@ export default function Carousel({ items, title = "Promoções" }: CarouselProps
   const [currentIndex, setCurrentIndex] = useState(0)
   const isMobile = useMobile()
 
+    const prevSlide = () => {
+    setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
+  }
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
   }
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
+  useEffect(() => {
+
+    const nextSlide = () => {
+    setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
   }
 
-  useEffect(() => {
     const interval = setInterval(() => nextSlide(), 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [items.length])
 
   const getVisibleIndices = () => {
     const total = items.length
