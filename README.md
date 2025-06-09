@@ -1,6 +1,8 @@
 📝 Descrição do Projeto
 Este projeto é um aplicativo web desenvolvido com foco em otimizar o gerenciamento de promoções e operações de delivery para uma pizzaria, utilizando uma stack moderna e eficiente. 
 
+![image](https://github.com/user-attachments/assets/c09440ee-b9a9-4200-a708-082dd12e3f96) - Modelo de entidade e relacionamento, centralizando o "Pedido".
+
 🚀 Tecnologias Utilizadas
 Next.js — Framework React para construção de aplicações web com SSR (Server Side Rendering) e SSG (Static Site Generation).
 
