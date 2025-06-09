@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { promos, itens_cardapio } from "@prisma/client";
 import prismaSingleton from "@/lib/prisma";
-import { PromocaoSchema, ItensCardapio } from "@/app/types/Zod/ItemSchema";
+import { PromocaoSchema, ItensCardapio } from "@/types/Zod/ItemSchema";
 
 // Função para formatar item_cardapio
 function formatarItemCardapio(item: itens_cardapio): ItensCardapio {

@@ -1,5 +1,5 @@
-import { Promocao } from "@/app/types/Promocao";
-import { itensCardapio } from "@/app/types/ItemCardapio";
+import { Promocao } from "@/types/Promocao";
+import { itensCardapio } from "@/types/ItemCardapio";
 import { NextResponse } from "next/server";
 import { promos } from "@prisma/client";
 import { itens_cardapio } from "@prisma/client";

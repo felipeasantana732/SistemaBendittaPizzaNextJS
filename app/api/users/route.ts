@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { Prisma, clientes_benditta as PrismaCliente } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import { ClienteAPI } from "@/app/types/Cliente";
-import { authenticateApiRequest } from "@/app/utils/authAPIUtil";
+import { ClienteAPI } from "@/types/Cliente";
+import { authenticateApiRequest } from "@/lib/actions/authAPIUtil";
 
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -14,12 +14,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
     }
 
-    const user = authResult.user;
-
-    console.log(
-      "API /api/users: Buscando clientes via Prisma para usuário:",
-      user
-    );
+    //const user = authResult.user;
 
   try{
     const clientesFromDB: PrismaCliente[] = await prisma.clientes_benditta.findMany({
@@ -60,12 +55,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
     }
 
-    const user = authResult.user;
+    //const user = authResult.user;
 
-    console.log(
-      "API /api/users: Tentando Add Cliente via Prisma para usuário:",
-      user
-    );
+    
 
 
   type CreateClienteInput = Omit<

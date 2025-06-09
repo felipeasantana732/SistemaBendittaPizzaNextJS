@@ -47,13 +47,15 @@ model categorias_promo {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model clientes_benditta {
-  id              BigInt   @id @default(autoincrement())
-  created_at      DateTime @default(now()) @db.Timestamptz(6)
-  nomeCliente     String?
-  telefoneCliente String?
-  idMensagem      String?
-  sesionID        String?
-  enderecoCliente String?
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  nomeCliente      String?
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_by       String?            @map("created-by")
+  email            String?
+  endereco_cliente endereco_cliente[]
+  pagamento        pagamento[]
+  pedido           pedido[]
+  telefone_cliente telefone_cliente[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -77,18 +79,19 @@ model item_ingredientes {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model itens_cardapio {
-  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nome              String
-  tipo              String
-  tamanho           String?
-  preco             Decimal?            @db.Decimal(10, 2)
-  preco_grande      Decimal?            @db.Decimal(10, 2)
-  preco_individual  Decimal?            @db.Decimal(10, 2)
-  ativo             Boolean?            @default(true)
-  criado_em         DateTime?           @default(now()) @db.Timestamp(6)
-  categoria_pizza   String?
-  item_ingredientes item_ingredientes[]
-  itens_promo       itens_promo[]
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome               String
+  tipo               String
+  tamanho            String?
+  preco              Decimal?             @db.Decimal(10, 2)
+  preco_grande       Decimal?             @db.Decimal(10, 2)
+  preco_individual   Decimal?             @db.Decimal(10, 2)
+  ativo              Boolean?             @default(true)
+  criado_em          DateTime?            @default(now()) @db.Timestamp(6)
+  categoria_pizza    String?
+  item_pedido_partes item_pedido_partes[]
+  item_ingredientes  item_ingredientes[]
+  itens_promo        itens_promo[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -122,6 +125,7 @@ model promos {
   descricao               String?
   image_url_small         String?
   pessoas                 String?
+  item_pedido             item_pedido[]
   itens_promo             itens_promo[]
   relacao_categoria_promo relacao_categoria_promo[]
 }
@@ -135,4 +139,159 @@ model relacao_categoria_promo {
   promos           promos           @relation(fields: [promo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([categoria_id, promo_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model borda_recheada {
+  id               String        @id(map: "itens-pedidos_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome             String
+  preco_individual Decimal?      @default(0) @map("preco-individual") @db.Decimal
+  preco_grande     Decimal?      @default(0) @map("preco-grande") @db.Decimal
+  item_pedido      item_pedido[]
+
+  @@map("borda-recheada")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model endereco_cliente {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at         DateTime           @default(now()) @db.Timestamptz(6)
+  endereco           String?
+  ponto_referencia   String?            @map("ponto-referencia")
+  cep                String?
+  latitude_longitude String?            @map("latitude-longitude")
+  id_cliente         String?            @map("id-cliente") @db.Uuid
+  etiqueta           String?
+  clientes_benditta  clientes_benditta? @relation(fields: [id_cliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pedido             pedido[]
+
+  @@map("endereco-cliente")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model entrega {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_pedido      String?     @map("id-pedido") @db.Uuid
+  id_entregador  String?     @map("id-entregador") @db.Uuid
+  tipo_entrega   String?     @default("Delivery") @map("tipo-entrega")
+  status_entrega String?     @map("status-entrega")
+  data_saida     DateTime?   @map("data-saida") @db.Timestamptz(6)
+  data_entrega   DateTime?   @map("data-entrega") @db.Timestamptz(6)
+  observacao     String?
+  entregador     entregador? @relation(fields: [id_entregador], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pedido         pedido?     @relation(fields: [id_pedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model entregador {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  nome       String?
+  telefone   String?
+  chave_pix  String?   @map("chave-pix")
+  ativo      Boolean   @default(true)
+  entrega    entrega[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model item_pedido {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  last_update        DateTime?            @default(now()) @map("last-update") @db.Timestamptz(6)
+  quantidade         Int                  @default(1)
+  id_pedido          String?              @map("id-pedido") @db.Uuid
+  id_borda           String?              @map("id-borda") @db.Uuid
+  preco_item         Decimal              @map("preco-item") @db.Decimal
+  id_promo           String?              @map("id-promo") @db.Uuid
+  observacao         String?
+  borda_recheada     borda_recheada?      @relation(fields: [id_borda], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pedido             pedido?              @relation(fields: [id_pedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promos             promos?              @relation(fields: [id_promo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  item_pedido_partes item_pedido_partes[]
+
+  @@map("item-pedido")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model item_pedido_partes {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_item_pedido   String          @map("id-item-pedido") @db.Uuid
+  preco_parte      Decimal?        @default(0) @map("preco-parte") @db.Decimal
+  id_item_cardapio String?         @map("id-item-cardapio") @db.Uuid
+  tipo_parte       String?         @default("pizza-grande") @map("tipo-parte")
+  posicao          String?         @default("")
+  itens_cardapio   itens_cardapio? @relation(fields: [id_item_cardapio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  item_pedido      item_pedido     @relation(fields: [id_item_pedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("item-pedido-partes")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model pagamento {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_pedido         String             @map("id-pedido") @db.Uuid
+  forma_pagamento   String?            @default("Maquina Cartao") @map("forma-pagamento")
+  valor_pago        Decimal?           @default(0) @map("valor-pago") @db.Decimal
+  troco_para        Decimal?           @default(0) @map("troco-para") @db.Decimal
+  status_pagamento  String?            @default("Pendente") @map("status-pagamento")
+  data_pagamento    DateTime?          @default(now()) @map("data-pagamento") @db.Timestamptz(6)
+  observacao        String?
+  gateway           String?
+  id_cliente        String?            @map("id-cliente") @db.Uuid
+  clientes_benditta clientes_benditta? @relation(fields: [id_cliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  pedido            pedido             @relation(fields: [id_pedido], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model pedido {
+  id                  String             @id(map: "pedidos_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at          DateTime           @default(now()) @db.Timestamptz(6)
+  last_update         DateTime?          @default(now()) @db.Timestamptz(6)
+  created_by          String?            @map("created-by")
+  id_status           String?            @map("id-status") @db.Uuid
+  prazo_entrega       Int                @default(30) @map("prazo-entrega")
+  id_entrega          String?            @map("id-entrega") @db.Uuid
+  id_endereco         String?            @map("id-endereco") @db.Uuid
+  valor_itens         Decimal            @default(0) @map("valor-itens") @db.Decimal
+  desconto            Decimal?           @default(0) @db.Decimal
+  taxa_entrega        Decimal            @default(0) @map("taxa-entrega") @db.Decimal
+  valor_pedido        Decimal            @default(0) @map("valor-pedido") @db.Decimal
+  id_cliente          String?            @map("id-cliente") @db.Uuid
+  id_telefone_cliente String?            @map("id-telefone-cliente") @db.Uuid
+  entrega             entrega[]
+  item_pedido         item_pedido[]
+  pagamento           pagamento[]
+  clientes_benditta   clientes_benditta? @relation(fields: [id_cliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  endereco_cliente    endereco_cliente?  @relation(fields: [id_endereco], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  status_pedido       status_pedido?     @relation(fields: [id_status], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  telefone_cliente    telefone_cliente?  @relation(fields: [id_telefone_cliente], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model status_pedido {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome      String
+  descricao String
+  pedido    pedido[]
+
+  @@map("status-pedido")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model telefone_cliente {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at        DateTime           @default(now()) @db.Timestamptz(6)
+  numero_telefone   String?            @map("numero-telefone")
+  cliente_id        String?            @default(dbgenerated("gen_random_uuid()")) @map("cliente-id") @db.Uuid
+  principal         Boolean            @default(true)
+  pedido            pedido[]
+  clientes_benditta clientes_benditta? @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("telefone-cliente")
 }

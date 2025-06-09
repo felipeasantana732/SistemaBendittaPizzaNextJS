@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { clientes_benditta as Cliente } from '@prisma/client'; 
-import { createClient } from '@/app/utils/supabase/server'; // Ajuste o caminho se necessário
+import { createClient } from '@/lib/supabase/server'; // Ajuste o caminho se necessário
 import prisma from '@/lib/prisma'; // Ajuste o caminho se necessário
+import { string } from 'zod';
 
 interface ClienteAPI {
   id: string; 
@@ -46,7 +47,7 @@ export async function GET(request: Request) {
 
     const cliente: Cliente | null = await prisma.clientes_benditta.findUnique({
         where: {
-          id: idAsBigInt, // Usa o ID convertido para BigInt
+          id: clientId, // Usa o ID convertido para BigInt
         },
       });
 
