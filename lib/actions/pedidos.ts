@@ -186,6 +186,7 @@ export async function getHistoricoPedidosById(
         //console.log(JSON.stringify(itensPorPedido, null, 2));
 
         return {
+
           id: pedido.id,
           nomeCliente: pedido.clientes_benditta?.nomeCliente || null,
           telefonePrincipal: pedido.telefone_cliente?.numero_telefone || null,

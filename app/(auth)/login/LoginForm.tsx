@@ -100,8 +100,7 @@ export default function LoginForm() {
               required
               value={passwordValue} // Controla o valor do input
               onChange={handlePasswordChange} // Atualiza o estado ao digitar
-              // Adiciona padding à direita para não sobrepor o botão
-              className="pr-10" // Ajuste o valor (pr-10, pr-12) conforme necessário
+              className="pr-10" 
             />
             {/* Botão para mostrar/ocultar senha - Renderizado condicionalmente */}
             {passwordValue && ( // Só mostra o botão se houver algo digitado

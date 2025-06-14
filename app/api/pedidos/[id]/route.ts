@@ -125,9 +125,7 @@ export async function GET(
   }
 }
 
-  const UpdateStatusSchema = z.object({
-    status_id: z.string().min(1, "ID do status é obrigatório"),
-  });
+  
 
 export async function PATCH(
   request: Request
@@ -157,10 +155,15 @@ export async function PATCH(
       );
     }
 
+    const UpdateStatusSchema = z.object({
+      status: z.string().min(1, "ID do status é obrigatório"),
+   });
+
     // Validar os dados do body usando Zod
     const validationResult = UpdateStatusSchema.safeParse(body);
     
     if (!validationResult.success) {
+      console.log("Validation Result errior")
       return NextResponse.json(
         {
           message: "Dados inválidos",
@@ -170,11 +173,11 @@ export async function PATCH(
       );
     }
 
-    const { status_id } = validationResult.data;
+    const { status } = validationResult.data;
 
     // Tentar atualizar o status do pedido
     try {
-      const resultado = await updateStatusPedido(id, status_id);
+      const resultado = await updateStatusPedido(id, status);
 
       if (resultado.success) {
         return NextResponse.json(
