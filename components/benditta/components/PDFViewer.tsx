@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Image from 'next/image';
 
 const PDFViewerContainer = styled.div`
   width: 100%;
@@ -28,22 +29,31 @@ const PDFPage = styled.div`
   width: 100%;
   max-width: 350px;
   margin: 0 auto;
-  
-  img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    
-    &:hover {
-      transform: scale(1.02);
-    }
-  }
-  
+  position: relative; /* Crucial para Image fill */
+  height: 0; /* Crucial para padding-bottom aspect ratio trick */
+  padding-bottom: calc(450 / 350 * 100%); /* Aspect ratio of 350x450 image (height / width * 100%) */
+
   @media (min-width: 768px) {
     margin: 0;
   }
+`;
+
+const StyledImage = styled(Image)`
+  object-fit: cover; /* Ou 'contain' dependendo do comportamento desejado */
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+`;
+
+const StyledLink = styled.a`
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
 `;
 
 const DownloadButton = styled.a`
@@ -78,14 +88,14 @@ const PDFViewer: React.FC = () => {
     <PDFViewerContainer>
       <PDFPreview>
         <PDFPage>
-          <a href="/img/bendittaPizza/cardapio1.jpg" target="_blank" rel="noopener noreferrer">
-            <img src="/img/bendittaPizza/cardapio1.jpg" alt="Cardápio Benditta Pizza - Página 1" />
-          </a>
+          <StyledLink href="/img/bendittaPizza/cardapio1.jpg" target="_blank" rel="noopener noreferrer">
+            <StyledImage src="/img/bendittaPizza/cardapio1.jpg" alt="Cardápio Benditta Pizza - Página 1" fill />
+          </StyledLink>
         </PDFPage>
         <PDFPage>
-          <a href="/img/bendittaPizza/cardapio1.jpg" target="_blank" rel="noopener noreferrer">
-          <img src="/img/bendittaPizza/cardapio2.jpg" alt="Cardápio Benditta Pizza - Página 2" />
-          </a>
+          <StyledLink href="/img/bendittaPizza/cardap2.jpg" target="_blank" rel="noopener noreferrer">
+            <StyledImage src="/img/bendittaPizza/cardap2.jpg" alt="Cardápio Benditta Pizza - Página 2" fill />
+          </StyledLink>
         </PDFPage>
       </PDFPreview>
       
@@ -103,3 +113,4 @@ const PDFViewer: React.FC = () => {
 };
 
 export default PDFViewer;
+

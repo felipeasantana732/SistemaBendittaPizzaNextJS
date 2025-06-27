@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import Image from 'next/image';
+import bendittaLogo from '@/public/img/bendittaPizza/bendittaLogoSVG.svg';
 
 
 
@@ -27,13 +29,6 @@ const FooterLogo = styled.div`
   flex: 1;
   min-width: 250px;
   margin-bottom: 30px;
-  
-  img {
-    width: 120px;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-  }
   
   p {
     font-size: 0.9rem;
@@ -170,7 +165,12 @@ const Footer: React.FC = () => {
     <FooterContainer>
       <FooterContent>
         <FooterLogo>
-          <img src="/img/bendittaPizza/bendittaLogoSVG.svg" alt="Benditta Pizza" />
+          <Image 
+            src={bendittaLogo} 
+            alt="Benditta Pizza"
+            width={120}
+            style={{ marginBottom: '20px', marginLeft: 'auto', marginRight: 'auto' }}
+          />
           <p>Massa tradicional italiana com 48 horas de fermentação. Sabor inigualável e ingredientes selecionados para proporcionar a melhor experiência.</p>
         </FooterLogo>
         

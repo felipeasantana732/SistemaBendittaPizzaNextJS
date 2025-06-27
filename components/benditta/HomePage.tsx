@@ -15,7 +15,7 @@ const HomePage: React.FC = () => {
         <Header />
         <Hero />
         <About />
-        <Menu />    
+        <Menu />
         <Contact /> 
         <Footer />
         </div>

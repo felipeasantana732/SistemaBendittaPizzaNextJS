@@ -1,7 +1,6 @@
 // app/login/page.tsx
 
-import LoginForm from './LoginForm'; // 👈 1. Importe o componente LoginForm
-                                            //    (Ajuste o caminho se necessário)
+import LoginForm from './LoginForm'; 
 
 export default function LoginPage() {
   return (

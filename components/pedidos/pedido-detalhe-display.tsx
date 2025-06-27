@@ -370,7 +370,9 @@ export default function PedidoPage() {
       setLoading(false)
       setError("ID do pedido não encontrado")
     }
-  }, [params.id]) // Removido toast das dependências
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id]) // Removido toast das dependências dando loop
+  
 
   const handleStatusChange = async (newStatus: string, statusId: string) => {
     if (!data?.pedido) return

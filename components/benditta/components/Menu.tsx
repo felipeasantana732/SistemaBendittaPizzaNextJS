@@ -7,6 +7,7 @@ import styles from "../styleBenditta.module.css";
 import { Promocao, Promotion, CategoriaPromocoes } from "@/types/Promocao";
 import { useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import Insta from "./Insta";
 
 function mapApiPromo(apiPromo: Promocao): Promotion {
   return {
@@ -20,7 +21,8 @@ function mapApiPromo(apiPromo: Promocao): Promotion {
 }
 
 const MenuContainer = styled.section`
-  padding: 100px 0;
+  background-color: var(--color-gray-benditta);
+  padding: 100px 0 20px 0;
 `;
 
 const ViewAllPromosLink = styled(Link)`
@@ -161,6 +163,7 @@ const Menu: React.FC = () => {
       <ViewAllPromosLink href="/promos">
         Ver todas as promoções
       </ViewAllPromosLink>
+      <Insta />
     </MenuContainer>
   );
 };
